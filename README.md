@@ -19,3 +19,22 @@ In case of "error: externally-managed-environment", run:
 pip install python-telegram-bot --break-system-packages
 ```
 to force the installation.
+
+## Bot setup via @BotFather
+I set up a list of commands, a profile picture and a short description via BotFather.
+Just follow the steps:
+- Open "menu";
+- Select "edit your bots";
+- Select your bot;
+- Tap on "Edit Bot";
+- Now, select "Edit Commands";
+- Here, send to the bot the following string:
+```
+start - How to use the bot
+payments - Verify payments
+help - If you need help or the bot does not work
+```
+  in order to create the following commands:
+    - Start;
+    - Check payments;
+    - Help;
