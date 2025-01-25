@@ -16,6 +16,3 @@ pip3 install python-telegram-bot
 # Optionally needed --break-system-packages
 # if pip is not running on a virtual environment.
 ```
-
-## Lenguages:
-- Python;
