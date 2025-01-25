@@ -1,43 +1,58 @@
-import logging
+###################################################################
+# IMPORT LIBRARIES
 from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+###################################################################
+# GLOBAL VARIABLES
+Ripetizioni = ["@brunette105"]
+Netflix = ["@danidarge","@skhuuuu","@grev8"]
+Spotify = ["@danidarge","@skhuuuu"]
+Admin = "@Leon4rd002"
+###################################################################
+# GENERAL PURPOSE FUNCTIONS
 
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
-)
+# Get token from local folder
+# File must be named "TOKEN.txt"
+def get_token():
+    with open("TOKEN.txt", "r") as file:
+        return file.read().strip()
 
-logger = logging.getLogger(__name__)
+###################################################################
+# BOT FUNCTIONS
 
-# Define a few command handlers. These usually take the two arguments update and
-# context.
-def start(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /start is issued."""
-    update.message.reply_text('Hi!')
+# Define hello command handler
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
-def help_command(update: Update, context: CallbackContext) -> None:
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+# Define help command handler
+async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(f'Help message')
 
+###################################################################
+# MAIN FUNCTION
+
+# Define main function
 def main() -> None:
-    """Start the bot."""
-    # Create the Updater and pass it your bot's token.
-    updater = Updater("YOUR_TOKEN_HERE")
+    # Debug message
+    print("Bot started")
+    
+    # Create application
+    app = ApplicationBuilder().token(get_token()).build()
 
-    # Get the dispatcher to register handlers
-    dispatcher = updater.dispatcher
+    # Handle start command
+    app.add_handler(CommandHandler("start", start))
 
-    # on different commands - answer in Telegram
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
+    # Handle help command
+    app.add_handler(CommandHandler("aiuto", help))
 
-    # Start the Bot
-    updater.start_polling()
+    # Run polling
+    app.run_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT
-    updater.idle()
+###################################################################
+# MAIN FUNCTION
 
 if __name__ == '__main__':
     main()
+
+###################################################################
+# END OF FILE

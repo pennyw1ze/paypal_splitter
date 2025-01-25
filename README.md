@@ -35,6 +35,6 @@ payments - Verify payments
 help - If you need help or the bot does not work
 ```
   in order to create the following commands:
-    - Start;
-    - Check payments;
-    - Help;
+  > Start;
+  > Check payments;
+  > Help;
