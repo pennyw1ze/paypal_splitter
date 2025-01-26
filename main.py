@@ -4,10 +4,15 @@ from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 ###################################################################
 # GLOBAL VARIABLES
+
+# Users lists
 Ripetizioni = ["@brunette105"]
 Netflix = ["@danidarge","@skhuuuu","@grev8"]
 Spotify = ["@danidarge","@skhuuuu"]
-Admin = "@Leon4rd002"
+
+# Admin ID
+Admin = 351523902
+
 ###################################################################
 # GENERAL PURPOSE FUNCTIONS
 
@@ -22,11 +27,11 @@ def get_token():
 
 # Define hello command handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
+    await update.message.reply_text(f'Ciao {update.effective_user.first_name}, sono un bot creato per aiutare Leonardo a gestire i pagamenti.')
 
 # Define help command handler
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Help message')
+    await update.message.reply_text(f'Lorem ipsum dolor sit amet.\nIn caso di problemi contattare @Leon4rd002')
 
 ###################################################################
 # MAIN FUNCTION
@@ -44,6 +49,9 @@ def main() -> None:
 
     # Handle help command
     app.add_handler(CommandHandler("aiuto", help))
+
+    # Handle pagamenti command
+    app.add_handler(CommandHandler("pagamenti", help))
 
     # Run polling
     app.run_polling()
