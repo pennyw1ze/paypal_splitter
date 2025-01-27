@@ -16,7 +16,7 @@ Netflix = ["@danidarge","@skhuuuu","@grev8"]
 Spotify = ["@danidarge","@skhuuuu"]
 
 # Admin ID
-Admin = 351523902
+Admin = 35152390
 
 # Translate dictionary
 translate = {key: value for key, value in get_all_translate()}
@@ -39,6 +39,11 @@ def format(data):
     for user in data:
         formatted += f"{translate[user[0]]}:\n- Netflix: {user[1]}€;\n- Spotify: {user[2]}€;\n- Ripetizioni: {user[3]}€\n-----------------------\n"
     return formatted
+
+# Get PayPal link from local folder
+def get_paypal_link():
+    with open("../data/paypal_me_link.txt", "r") as file:
+        return file.read().strip()
 
 ###################################################################
 # BOT FUNCTIONS
@@ -99,14 +104,13 @@ async def pagamenti(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Sends a message with three inline buttons attached
     keyboard = [
         [button for button in [
-            InlineKeyboardButton(f"Salda Netflix ({n}€)", callback_data="1") if n > 0 else None,
-            InlineKeyboardButton(f"Salda Spotify ({s}€)", callback_data="2") if s > 0 else None,
-            InlineKeyboardButton(f"Salda Ripetizioni ({r}€)", callback_data="3") if r > 0 else None,
+            InlineKeyboardButton(f"Salda Netflix ({n}€)", callback_data=f"{n}") if n > 0 else None,
+            InlineKeyboardButton(f"Salda Spotify ({s}€)", callback_data=f"{s}") if s > 0 else None,
+            InlineKeyboardButton(f"Salda Ripetizioni ({r}€)", callback_data=f"{r}") if r > 0 else None,
         ] if button is not None]
     ]
-
     if n*s > 0:
-        keyboard.append([InlineKeyboardButton(f"Salda tutto ({n+s+r})€", callback_data="3")])
+        keyboard.append([InlineKeyboardButton(f"Salda tutto ({n+s})€", callback_data=f"{n+s}")])
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(message, reply_markup=reply_markup)
@@ -149,6 +153,26 @@ async def add_amount(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     # Send confirmation message
     await update.message.reply_text(f"Aggiornamento completato.")
 
+# Define callback query handler
+# CallbackQueries need to be answered, even if no notification to the user is needed
+# Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    # Get user data
+    id = update.effective_user.id
+    user = get_user(id)
+    # Get the service
+    amount = round(float(query.data))
+    # Check if the user has to pay
+    if user[1] + user[2] + user[3] == 0:
+        await query.edit_message_text("Non devi pagare niente, sei a posto!")
+        return None
+    # Send confirmation message
+    link = get_paypal_link() + f"{amount}"
+    await query.edit_message_text(text = f"Puoi procedere al pagamento di {amount}€ tramite PayPal al seguente link:\n{link}\nUna volta\
+ completato il trasferimento, verrà aggiornato il tuo saldo. L'operazione potrebbe richiedere qualche minuto.")
+
 
 ###################################################################
 # MAIN FUNCTION
@@ -176,6 +200,9 @@ def main() -> None:
     # ADMIN COMMANDS
     # Handle Increasing and decreasing amounts
     app.add_handler(CommandHandler("aumenta", add_amount))
+
+    # Handle button press
+    app.add_handler(CallbackQueryHandler(button))
 
     # Run polling
     app.run_polling()
