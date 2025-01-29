@@ -4,6 +4,7 @@ from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 # Import database functions
 from db_functions import *
+import os
 ###################################################################
 # Mount the database
 build_database()
@@ -13,6 +14,9 @@ build_database()
 # Admin ID
 Admin = 35152390
 
+# Base path
+base_path = os.path.dirname(os.path.abspath(__file__))
+
 # Translate dictionary
 translate = {key: value for key, value in get_all_translate()}
 ###################################################################
@@ -21,7 +25,8 @@ translate = {key: value for key, value in get_all_translate()}
 # Get token from local folder
 # File must be named "TOKEN.txt"
 def get_token():
-    with open("../data/TOKEN.txt", "r") as file:
+    token_path = os.path.join(base_path, '..', 'data', 'TOKEN.txt')
+    with open(token_path, "r") as file:
         return file.read().strip()
     
 # Get pretty formatted lists from database outcomes
@@ -37,7 +42,8 @@ def format(data):
 
 # Get PayPal link from local folder
 def get_paypal_link():
-    with open("../data/paypal_me_link.txt", "r") as file:
+    paypal_link_path = os.path.join(base_path, '..', 'data', 'paypal_me_link.txt')
+    with open(paypal_link_path, "r") as file:
         return file.read().strip()
 
 ###################################################################
