@@ -18,10 +18,6 @@ def build_database():
                 id INTEGER PRIMARY KEY,
                 name TEXT
               )''')
-    c.execute('''CREATE TABLE IF NOT EXISTS username(
-                telegram_id INTEGER PRIMARY KEY,
-                username TEXT
-              )''')
 
     # Commit changes
     conn.commit()
@@ -127,22 +123,6 @@ def add_translate(id, name):
 
     # Add user ( or replace if already exists )
     c.execute("INSERT OR REPLACE INTO translate VALUES (?, ?)", (id, name))
-
-    # Commit changes
-    conn.commit()
-
-    # Close connection
-    conn.close()
-
-
-# Add a username to the database
-def add_username(id, username):
-    # Connect to database
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-
-    # Add user ( or replace if already exists )
-    c.execute("INSERT OR REPLACE INTO username VALUES (?, ?)", (id, username))
 
     # Commit changes
     conn.commit()

@@ -1,7 +1,7 @@
 ###################################################################
 # IMPORT LIBRARIES
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, Application, CallbackQueryHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
 # Import database functions
 from db_functions import *
 ###################################################################
@@ -9,11 +9,6 @@ from db_functions import *
 build_database()
 ###################################################################
 # GLOBAL VARIABLES
-
-# Users lists
-Ripetizioni = ["@brunette105"]
-Netflix = ["@danidarge","@skhuuuu","@grev8"]
-Spotify = ["@danidarge","@skhuuuu"]
 
 # Admin ID
 Admin = 35152390
@@ -67,8 +62,6 @@ async def add_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Add user to database
     add_user_table(id)
     add_translate(id, update.effective_user.first_name)
-    if update.effective_user.username is not None:
-        add_username(id, update.effective_user.username)
     # Update translate dictionary
     global translate
     translate = {key: value for key, value in get_all_translate()}
