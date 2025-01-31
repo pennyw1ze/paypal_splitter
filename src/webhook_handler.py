@@ -48,6 +48,7 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):
         decoded_data = base64.urlsafe_b64decode(email_data["message"]["data"]).decode("utf-8")
         decoded_data = json.loads(decoded_data)
         history_id = decoded_data["historyId"]
+        print(f"Received historyId: {history_id}")
         get_latest_email(history_id)
         self.send_response(200)
         self.end_headers()
