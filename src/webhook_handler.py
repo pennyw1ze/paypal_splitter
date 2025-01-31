@@ -41,7 +41,7 @@ def start_ngrok():
 class WebhookHandler(http.server.BaseHTTPRequestHandler):
     # Handle POST requests
     def do_POST(self):
-        get_latest_email(history_id)
+        get_latest_email()
         self.send_response(200)
         self.end_headers()
 
