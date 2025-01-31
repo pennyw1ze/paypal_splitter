@@ -1,41 +1,75 @@
-import json
-from email import message_from_string
-from email.policy import default
+import requests
+from google.auth.transport.requests import Request
+import pickle
+import os
 
-import http.server
+# Base path
+base_path = os.path.dirname(os.path.abspath(__file__))
 
-# Global variables
-PORT = 8080
+# Token path
+token_path = os.path.join(base_path, '..', 'data', 'token.pickle')
 
-class WebhookHandler(http.server.BaseHTTPRequestHandler):
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        email_data = json.loads(post_data)
+def get_latest_email(history_id):
+    # Load OAuth credentials
+    with open(token_path, "rb") as token:
+        creds = pickle.load(token)
 
-        email_message = message_from_string(email_data['raw'], policy=default)
-        self.handle_email(email_message)
+    # Refresh token if expired
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+        with open(token_path, "wb") as token:
+            pickle.dump(creds, token)
 
-        self.send_response(200)
-        self.end_headers()
+    # Get access token
+    access_token = creds.token
+    headers = {"Authorization": f"Bearer {access_token}"}
 
-    def handle_email(self, email_message):
-        subject = email_message['subject']
-        from_address = email_message['from']
-        to_address = email_message['to']
-        body = email_message.get_body(preferencelist=('plain', 'html')).get_content()
+    # Fetch Gmail history based on latest historyId
+    history_url = f"https://www.googleapis.com/gmail/v1/users/me/history?startHistoryId={history_id}"
+    response = requests.get(history_url, headers=headers)
+    history_data = response.json()
 
-        # Process the email content as needed
-        print(f"Subject: {subject}")
-        print(f"From: {from_address}")
-        print(f"To: {to_address}")
-        print(f"Body: {body}")
+    # Extract the latest email message
+    latest_message = None
+    if "history" in history_data:
+        messages = []
+        
+        for event in history_data["history"]:
+            if "messages" in event:
+                for message in event["messages"]:
+                    messages.append(message)
 
-def run(server_class=http.server.HTTPServer, handler_class=WebhookHandler, port=PORT):
-    server_address = ('', port)
-    httpd = server_class(server_address, handler_class)
-    print(f'Starting server on port {port}...')
-    httpd.serve_forever()
+        # Sort messages by timestamp (internalDate) and get the most recent one
+        if messages:
+            messages = sorted(messages, key=lambda m: int(m.get("internalDate", 0)))
+            latest_message = messages[-1]  # Pick the latest email
 
-if __name__ == '__main__':
-    run()
+    # Fetch full email details
+    if latest_message:
+        message_id = latest_message["id"]
+        email_url = f"https://www.googleapis.com/gmail/v1/users/me/messages/{message_id}"
+        email_response = requests.get(email_url, headers=headers)
+        email_data = email_response.json()
+
+        # Check if the message is "UNREAD"
+        if "UNREAD" in email_data["labelIds"]:
+            # Extract sender, subject, and snippet
+            headers_list = email_data["payload"]["headers"]
+            sender = next(h["value"] for h in headers_list if h["name"] == "From")
+            subject = next(h["value"] for h in headers_list if h["name"] == "Subject")
+            snippet = email_data.get("snippet", "")
+            body = email_data["payload"]["body"]["data"]
+
+            print(f"Latest Unread Email Received:")
+            print(f"Sender: {sender}")
+            print(f"Subject: {subject}")
+            print(f"Snippet: {snippet}")
+
+            # Mark the message as "READ"
+            modify_url = f"https://www.googleapis.com/gmail/v1/users/me/messages/{message_id}/modify"
+            modify_body = {
+                "removeLabelIds": ["UNREAD"]
+            }
+            requests.post(modify_url, headers=headers, json=modify_body)
+
+get_latest_email(332175)

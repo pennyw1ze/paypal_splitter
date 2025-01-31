@@ -37,6 +37,10 @@ Run the command provided by ngrok to start the tunnel:
 ```bash
 ngrok http --url=<domain_name> 80
 ```
+- Google authentication services:
+```bash
+pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib --break-system-package
+```
 ## Bot setup via @BotFather
 I set up a list of commands, a profile picture and a short description via BotFather.
 Just follow the steps:
