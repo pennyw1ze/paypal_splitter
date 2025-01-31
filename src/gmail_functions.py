@@ -71,5 +71,4 @@ def get_latest_email(history_id):
                 "removeLabelIds": ["UNREAD"]
             }
             requests.post(modify_url, headers=headers, json=modify_body)
-
-get_latest_email(332175)
+    print("No new unread emails found.")
