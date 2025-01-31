@@ -6,13 +6,20 @@ import http.server
 import sys
 import base64
 import gmail_functions
+import os
 
 # Global variables
 PORT = 8080
 
+# Base path
+base_path = os.path.dirname(os.path.abspath(__file__))
+
+# Token path
+ngrok_url = os.path.join(base_path, '..', 'data', 'ngrok_url.txt')
+
 # Get ngrok URL from ngrok_url.txt file in data folder
 def get_ngrok_url():
-    with open("data/ngrok_url.txt", "r") as file:
+    with open(ngrok_url, "r") as file:
         ngrok_url = file.read().strip()
     return ngrok_url
 
