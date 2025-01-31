@@ -1,10 +1,8 @@
-import json
 from email import message_from_string
 from email.policy import default
 import subprocess
 import http.server
 import sys
-import base64
 from gmail_functions import get_latest_email
 import os
 
@@ -41,14 +39,8 @@ def start_ngrok():
 
 # Webhook handler class
 class WebhookHandler(http.server.BaseHTTPRequestHandler):
+    # Handle POST requests
     def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        post_data = self.rfile.read(content_length)
-        email_data = json.loads(post_data)
-        decoded_data = base64.urlsafe_b64decode(email_data["message"]["data"]).decode("utf-8")
-        decoded_data = json.loads(decoded_data)
-        history_id = decoded_data["historyId"]
-        print(f"Received historyId: {history_id}")
         get_latest_email(history_id)
         self.send_response(200)
         self.end_headers()
@@ -66,8 +58,7 @@ def run(server_class=http.server.HTTPServer, handler_class=WebhookHandler, port=
     print(f'Starting server on port {port}...')
     httpd.serve_forever()
 
-
-
+# Main function
 if __name__ == '__main__':
     # Start ngrok
     ngrok_process = start_ngrok()
