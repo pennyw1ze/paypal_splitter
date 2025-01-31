@@ -5,6 +5,9 @@ import os
 
 def get_latest_email(history_id):
 
+    print("History ID check:", history_id)
+    print(type(history_id))
+
     # Base path
     base_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -29,6 +32,7 @@ def get_latest_email(history_id):
     history_url = f"https://www.googleapis.com/gmail/v1/users/me/history?startHistoryId={history_id}"
     response = requests.get(history_url, headers=headers)
     history_data = response.json()
+    print("History data:", history_data)
 
     # Extract the latest email message
     latest_message = None
@@ -72,3 +76,5 @@ def get_latest_email(history_id):
             }
             requests.post(modify_url, headers=headers, json=modify_body)
     print("No new unread emails found.")
+
+# get_latest_email(333405)
