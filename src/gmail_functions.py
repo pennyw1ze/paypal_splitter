@@ -58,7 +58,6 @@ def get_latest_email(history_id):
             sender = next(h["value"] for h in headers_list if h["name"] == "From")
             subject = next(h["value"] for h in headers_list if h["name"] == "Subject")
             snippet = email_data.get("snippet", "")
-            body = email_data["payload"]["body"]["data"]
 
             print(f"Latest Unread Email Received:")
             print(f"Sender: {sender}")
