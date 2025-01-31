@@ -3,13 +3,14 @@ from google.auth.transport.requests import Request
 import pickle
 import os
 
-# Base path
-base_path = os.path.dirname(os.path.abspath(__file__))
-
-# Token path
-token_path = os.path.join(base_path, '..', 'data', 'token.pickle')
-
 def get_latest_email(history_id):
+
+    # Base path
+    base_path = os.path.dirname(os.path.abspath(__file__))
+
+    # Token path
+    token_path = os.path.join(base_path, '..', 'data', 'token.pickle')
+
     # Load OAuth credentials
     with open(token_path, "rb") as token:
         creds = pickle.load(token)
