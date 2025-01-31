@@ -53,5 +53,3 @@ def get_latest_email():
         }
         requests.post(modify_url, headers=headers, json=modify_body)
     print("No new unread emails found.")
-
-get_latest_email()
