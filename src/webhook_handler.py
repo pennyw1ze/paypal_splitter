@@ -46,6 +46,7 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):
         post_data = self.rfile.read(content_length)
         email_data = json.loads(post_data)
         decoded_data = base64.urlsafe_b64decode(email_data["message"]["data"]).decode("utf-8")
+        decoded_data = json.loads(decoded_data)
         history_id = decoded_data["historyId"]
         gmail_functions(history_id)
         self.send_response(200)
