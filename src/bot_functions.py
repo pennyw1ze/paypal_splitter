@@ -101,11 +101,16 @@ def send_telegram_message(message, chat_id):
 
 # Define hello command handler
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Ciao {update.effective_user.first_name}, sono un bot creato per aiutare Leonardo a gestire i pagamenti.')
-
+    await update.message.reply_text(f'Ciao {update.effective_user.first_name}, sono un bot creato per aiutare Leonardo a gestire i pagamenti. Per essere \
+aggiunto alla lista degli utenti, premi il tasto "Aggiungimi". Per visualizzare le varie opzioni del bot, premere sull\'icona del menù a sinistra accanto \
+alla tastiera. Per visualizzare i pagamenti da effettuare, premere su "Pagamenti".\nIn caso di problemi seleziona la voce "Aiuto". Il pagamento, una volta ricevuto \
+verà aggiornato automaticamente scalando l\'ammontare dal totale dei soldi dovuti.\n\n**IMPORTANTE**\nVerificare che il proprio nome su telegram corrisponda \
+a quello vero inserito nell\'account paypal. In caso contrario, il pagamento non verrà riconosciuto.\nPer modificare il prorpio nome su telegram, andare nelle impostazioni \
+alla voce "Nome" e modificarlo. In caso di problemi contattare @Leon4rd002.')
 # Define help command handler
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Lorem ipsum dolor sit amet.\nIn caso di problemi contattare @Leon4rd002')
+    await update.message.reply_text(f'Per visualizzare le varie opzioni del bot, premere sull\'icona del menù a sinistra accanto \
+alla tastiera. Per capire come funziona il bot, premere inizia.\nIn caso di problemi contattare @Leon4rd002')
 
 # Define add user command handler
 async def add_user(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -219,8 +224,9 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         return None
     # Send confirmation message
     link = get_paypal_link() + f"{amount}"
-    await query.edit_message_text(text = f"Puoi procedere al pagamento di {amount}€ tramite PayPal al seguente link:\n{link}\nUna volta\
- completato il trasferimento, verrà aggiornato il tuo saldo. L'operazione potrebbe richiedere qualche minuto.")
+    await query.edit_message_text(text = f"Puoi procedere al pagamento di {amount}€ tramite PayPal al seguente link:\n{link}\nUna volta \
+completato il trasferimento, verrà aggiornato il tuo saldo. L'operazione potrebbe richiedere qualche minuto. Al termine dell'operazione,\
+riceverai un messaggio di conferma. Se si verifica qualche problema, il messaggio verrà inviato automaticamente all'amministratore.")
 
 
 ###################################################################
