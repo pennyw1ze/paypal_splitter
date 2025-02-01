@@ -52,25 +52,11 @@ class WebhookHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
 # Function to run the server
-def run(server_class=http.server.HTTPServer, handler_class=WebhookHandler, port=PORT):
+def start_server(server_class=http.server.HTTPServer, handler_class=WebhookHandler, port=PORT):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     print(f'Starting server on port {port}...')
-    httpd.serve_forever()
-
-# Main function
-# Start the server as a process like ngrok
-def start_server():
-
-    # Set creation flags for Windows or detach process for Unix-based systems
-    creationflags = subprocess.CREATE_NEW_CONSOLE if sys.platform == "win32" else 0
-
-    process = subprocess.Popen(
-        ["python3", "-c", "from webhook_handler import run; run()"],
-        stdout=subprocess.DEVNULL,  # Suppress output
-        stderr=subprocess.DEVNULL,  # Suppress errors
-        stdin=subprocess.DEVNULL,   # Detach from terminal input
-        start_new_session=True,     # Unix: detach process
-        creationflags=creationflags # Windows: start in new console
-    )
-    return process
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("Server interrupted!")
