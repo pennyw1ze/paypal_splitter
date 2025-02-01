@@ -1,7 +1,7 @@
 TOKEN.txt
+data/ngrok_url.txt
 database.db
 __pycache__/
 paypal_me_link.txt
 secret.json
 token.pickle
-../data/ngrok_url.txt

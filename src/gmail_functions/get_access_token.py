@@ -10,10 +10,10 @@ SCOPES = ["https://www.googleapis.com/auth/gmail.readonly", "https://www.googlea
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 # Path to your OAuth JSON file (replace with your file path)
-CLIENT_SECRET_FILE = os.path.join(base_path, '..', 'data', 'secret.json')
+CLIENT_SECRET_FILE = os.path.join(base_path, '../..', 'data', 'secret.json')
 
 # Token path
-token_path = os.path.join(base_path, '..', 'data', 'token.pickle')
+token_path = os.path.join(base_path, '../..', 'data', 'token.pickle')
 
 
 def get_credentials():

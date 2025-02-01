@@ -198,3 +198,58 @@ def add_ripetizioni_amount(telegram_id, amount):
 
     # Close connection
     conn.close()
+
+
+# Get telegram id from name
+def get_id(name):
+    # Connect to database
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    # Get user
+    c.execute("SELECT * FROM translate WHERE name=?", (name,))
+    user = c.fetchone()
+
+    # Close connection
+    conn.close()
+
+    # Handle case where user is not found
+    if user is None:
+        return None
+    
+    return user[0]
+
+# Remove amount from a user
+def process_payment(telegram_id, amount):
+    # Connect to database
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    # Get user
+    user = get_user(telegram_id)
+    user = list(user)
+    # Remove amount from netflix, if it's negative set it to 0 and proceed in remooving the rest
+    # from spotify, if it is negative set it to 0 and proceed in remooving the rest from ripetizioni
+    # if it is negative set it to 0
+    if user[1] - amount > 0:
+        user[1] -= amount
+    else:
+        amount -= user[1]
+        user[1] = 0
+        if user[2] - amount > 0:
+            user[2] -= amount
+        else:
+            amount -= user[2]
+            user[2] = 0
+            if user[3] - amount > 0:
+                user[3] -= amount
+            else:
+                user[3] = 0
+    # Update user
+    c.execute("UPDATE users SET netflix_amount=?, spotify_amount=?, ripetizioni_amount=? WHERE telegram_id=?", (user[1], user[2], user[3], telegram_id))
+
+    # Commit changes
+    conn.commit()
+
+    # Close connection
+    conn.close()

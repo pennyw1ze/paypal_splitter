@@ -7,7 +7,7 @@ import os
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 # Token path
-token_path = os.path.join(base_path, '..', 'data', 'token.pickle')
+token_path = os.path.join(base_path, '../..', 'data', 'token.pickle')
 
 def send_watch_request():
 

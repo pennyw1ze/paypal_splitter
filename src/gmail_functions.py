@@ -2,6 +2,8 @@ import requests
 from google.auth.transport.requests import Request
 import pickle
 import os
+import re
+from bot_functions import received_payment, add_netflix, add_spotify
 
 def get_latest_email():
 
@@ -45,11 +47,31 @@ def get_latest_email():
         print(f"Sender: {sender}")
         print(f"Subject: {subject}")
         print(f"Snippet: {snippet}")
-
+        
+        # Let's parse the string
+        # Check if the email is from PayPal
+        if "assistenza@paypal.it" in sender.lower():
+            # Check if the email is about receiving money (Italian)
+            if "hai ricevuto denaro" in subject.lower():
+                # Parse the snippet to get the amount and the payer using regex
+                # We have to find "ti ha inviato", get the previous 2 names, and the amount before "€"
+                elems = re.findall(r"([a-zA-Z]+ [a-zA-Z]+) ti ha inviato ([0-9]+,[0-9]+) € EUR", snippet)
+                name = elems[0][0].split(" ")[0]
+                amount = float(elems[0][1].replace(",", "."))
+                received_payment(name, amount)
+            elif "netflix" in subject.lower():
+                elems = re.findall(r"([0-9]+,[0-9]+) € EUR", snippet)
+                amount = float(elems[0].replace(",", "."))
+                add_netflix(amount)
+            elif "spotify" in subject.lower():
+                elems = re.findall(r"([0-9]+,[0-9]+) € EUR", snippet)
+                amount = float(elems[0].replace(",", "."))
+                add_spotify(amount)
         # Mark the message as "READ"
         modify_url = f"https://www.googleapis.com/gmail/v1/users/me/messages/{message_id}/modify"
         modify_body = {
             "removeLabelIds": ["UNREAD"]
         }
         requests.post(modify_url, headers=headers, json=modify_body)
-    print("No new unread emails found.")
+    else:
+        print("No new unread emails found.")
