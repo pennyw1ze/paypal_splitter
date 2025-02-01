@@ -181,7 +181,7 @@ async def add_amount(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     service = context.args[1]
     amount = float(context.args[2])
     # Check if the user is in the database
-    user = check_translate_name(name)
+    user = get_id(name)
     if user is None:
         await update.message.reply_text("L'utente non è registrato.")
         return None
@@ -190,7 +190,7 @@ async def add_amount(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
         await update.message.reply_text("Il servizio non è valido.")
         return None
     # Get payment data from user
-    user = get_user(id)
+    user = get_user(user)
     print(user)
     # Update the database
     if service == "Netflix":

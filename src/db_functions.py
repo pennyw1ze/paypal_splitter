@@ -130,21 +130,6 @@ def add_translate(id, name):
     # Close connection
     conn.close()
 
-# Check if a name is in the database
-def check_translate_name(name):
-    # Connect to database
-    conn = sqlite3.connect('database.db')
-    c = conn.cursor()
-
-    # Check if user is in the database
-    c.execute("SELECT * FROM translate WHERE name=?", (name,))
-    user = c.fetchone()
-
-    # Close connection
-    conn.close()
-    
-    return user
-
 # Add netflix amount
 def add_netflix_amount(telegram_id, amount):
     # Connect to database
