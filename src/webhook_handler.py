@@ -59,15 +59,9 @@ def run(server_class=http.server.HTTPServer, handler_class=WebhookHandler, port=
     httpd.serve_forever()
 
 # Main function
-if __name__ == '__main__':
-    # Start ngrok
-    ngrok_process = start_ngrok()
-    print(f"ngrok started with PID: {ngrok_process.pid}")
+def start_server():
     try:
         # Run the server
         run()
     except KeyboardInterrupt:
         print("\nInterruption received.\nShutting down server...")
-        ngrok_process.terminate()
-        ngrok_process.wait()
-        print("ngrok process terminated.")
