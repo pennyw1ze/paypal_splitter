@@ -1,7 +1,7 @@
 ###################################################################
 # IMPORT LIBRARIES
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
+from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler, MessageHandler, filters
 # Import database functions
 from db_functions import *
 import os
@@ -228,6 +228,12 @@ async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 completato il trasferimento, verrà aggiornato il tuo saldo. L'operazione potrebbe richiedere qualche minuto. Al termine dell'operazione,\
 riceverai un messaggio di conferma. Se si verifica qualche problema, il messaggio verrà inviato automaticamente all'amministratore.")
 
+    # Handle all messages
+async def handle_all_messages(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+    username = user.username if user.username else "N/A"
+    message = update.message.text
+    await send_telegram_message(f"Messaggio ricevuto da {username} (ID: {user.id}): {message}", Admin)
 
 ###################################################################
 # MAIN FUNCTION
@@ -244,6 +250,7 @@ def run_bot() -> None:
 
     # Handle start command
     app.add_handler(CommandHandler("inizia", start))
+    app.add_handler(CommandHandler("start", start))
 
     # Handle help command
     app.add_handler(CommandHandler("aiuto", help))
@@ -260,6 +267,9 @@ def run_bot() -> None:
 
     # Handle button press
     app.add_handler(CallbackQueryHandler(button))
+    
+    # Handle all messages
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_all_messages))
 
     # Run polling
     app.run_polling()
