@@ -13,7 +13,8 @@ build_database()
 # GLOBAL VARIABLES
 
 # Admin ID
-Admin = 351523902
+# Just send a message to the bot and print the user id
+Admin = 123456789
 
 # Base path
 base_path = os.path.dirname(os.path.abspath(__file__))
@@ -22,10 +23,10 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 translate = {key: value for key, value in get_all_translate()}
 
 # Netflix member list
-Netflix = ["Leonardo"]
+Netflix = ["Pennywise","Simone"]
 
 # Spotify member list
-Spotify = ["Leonardo","Chiara"]
+Spotify = ["Pennywise","Chiara"]
 
 ###################################################################
 # GENERAL PURPOSE FUNCTIONS

@@ -1,7 +1,1 @@
-# This file is a placeholder!
-# Follow the instructions and remove the content.
-Rename the file as "TOKEN.txt".
-Get your telegram bot token from bothfather and copy-paste it here.
-This is a guide that shows how to get the token.
-https://core.telegram.org/bots/tutorial#obtain-your-bot-token
-The "TOKEN.txt" file should only contain the bot's token.
+<your_telegra_bot_TOKEN_here>

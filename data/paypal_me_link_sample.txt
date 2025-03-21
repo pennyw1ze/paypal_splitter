@@ -1,2 +1,1 @@
-# Copy paste your paypal.me link here, erase all other content
-# and rename the file paypal_me_link.txt
+https://www.paypal.com/paypalme/<your_name>/
