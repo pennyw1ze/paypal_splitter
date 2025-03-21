@@ -2,7 +2,6 @@
 
 ## Project description
 Basic telegram bot to **split paypal payments** between friends.
-
 The bot collects the subscription by the user, with the command add me.
 
 When a user is added, his name is inserted into the **database**.
